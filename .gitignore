@@ -1,0 +1,43 @@
+# venvs / python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# node / build
+node_modules/
+dist/
+build/
+
+# secrets / credentials  (.env.example template is kept)
+.env
+.env.*
+!.env.example
+client_secret*.json
+credentials.json
+token.json
+*.pem
+*.key
+id_rsa*
+service_account*.json
+
+# data / databases
+*.db
+*.sqlite
+*.sqlite3
+*.session
+
+# personal data
+recipients*.csv
+contacts*.csv
+alerts.json
+
+# logs / os
+*.log
+.DS_Store
+# project-specific
+*.mp4
