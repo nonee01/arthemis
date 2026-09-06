@@ -6,12 +6,21 @@ insertion burn. What it is really about is the line of sight, since the
 interesting part of a flyby is the stretch where the Moon sits between the
 spacecraft and the only antenna that can hear it.
 
-![Artemis 2 snapshot](snapshot.png)
+![Free-return flyby](docs/flyby.gif)
 
-Earth on the left, the Moon on the right, the dashed line the trajectory, the
-orange dot the spacecraft and the cyan line the Earth-to-spacecraft path. When
-that cyan line intersects the lunar disc the link is occulted, and
-`check_los()` decides it with point-to-line geometry rather than by eye.
+Earth on the left, the Moon on the right, the dashed line the planned path, the
+trail coloured by speed and the cyan line the Earth-to-spacecraft link.
+
+## The moment the link goes
+
+![Loss of signal](docs/loss-of-signal.png)
+
+At mission elapsed time 5.02 days the spacecraft is 9,479 km from the lunar
+centre and the Moon is directly between it and Earth. `check_los()` decides
+that with point-to-line geometry rather than by eye: the perpendicular distance
+from the lunar centre to the Earth-spacecraft line, against the lunar radius.
+The telemetry says when the link comes back, and on the default geometry the
+blackout is short, which is the honest answer for this trajectory.
 
 ## Running it
 
@@ -21,7 +30,7 @@ pip install -r requirements.txt
 python -m arthemis.main                        # animated, in a window
 python -m arthemis.main --headless             # no GUI
 python -m arthemis.render_snapshot             # one frame to snapshot.png
-python -m arthemis.export_animation --out animation.mp4 --frames 240 --fps 24
+python -m arthemis.export_animation --out animation.mp4 --frames 300 --fps 25
 ```
 
 The mission is parameterised rather than hard-coded, so the geometry can be
@@ -53,9 +62,3 @@ off-axis that should stay visible.
 ```bash
 pytest
 ```
-
-## Known gap
-
-`main.py` calls `matplotlib.cm.get_cmap`, removed in matplotlib 3.9, so the
-animation needs `matplotlib<3.9` until that call is replaced with
-`matplotlib.colormaps[...]`.

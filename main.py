@@ -87,10 +87,9 @@ def run_simulation(moon_x=MOON_X, moon_y=MOON_Y, mission_days=MISSION_DAYS,
     signal_line, = ax.plot([], [], color='cyan', linewidth=1.5, zorder=4, alpha=0.8)
 
     # Initialize Telemetry UI
-    time_text = ax.text(-40000, 120000, '', color='white', fontsize=12, fontfamily='monospace')
     # `status_text` removed to avoid overlapping telemetry; use `comm_text` instead
     comm_text = ax.text(0.99, 0.98, '', transform=ax.transAxes, ha='right', va='top', color='cyan', fontsize=14, fontweight='bold', fontfamily='monospace')
-    watermark_text = ax.text(0.01, 0.01, 'made by none', transform=ax.transAxes, ha='left', va='bottom', color='white', fontsize=9, alpha=0.75)
+    watermark_text = ax.text(0.01, 0.01, 'made by Yassine El Aidous', transform=ax.transAxes, ha='left', va='bottom', color='white', fontsize=9, alpha=0.75)
 
     # --- CALCULATE THE TRAJECTORY ---
     # Import NumPy lazily to avoid requiring it at module import time
@@ -127,7 +126,7 @@ def run_simulation(moon_x=MOON_X, moon_y=MOON_Y, mission_days=MISSION_DAYS,
 
     # Path effects for text for better legibility
     pe_stroke = [pe.withStroke(linewidth=3, foreground='black')]
-    for txt in (time_text, comm_text, earth_label, moon_label, watermark_text):
+    for txt in (comm_text, earth_label, moon_label, watermark_text):
         txt.set_path_effects(pe_stroke)
 
     # --- ENHANCED VISUALS & KINEMATICS ---
@@ -166,7 +165,7 @@ def run_simulation(moon_x=MOON_X, moon_y=MOON_Y, mission_days=MISSION_DAYS,
     from matplotlib.collections import LineCollection
 
     norm = mcolors.Normalize(vmin=speed_s.min(), vmax=speed_s.max())
-    cmap = cm.get_cmap('plasma')
+    cmap = plt.get_cmap('plasma')
     trail_lc = LineCollection([], linewidths=2.8, zorder=8, capstyle='round')
     ax.add_collection(trail_lc)
 
@@ -285,8 +284,7 @@ def run_simulation(moon_x=MOON_X, moon_y=MOON_Y, mission_days=MISSION_DAYS,
             f"Path length: {path_length:,.0f} km"
         )
 
-        # Update time_text (compact) and halo
-        time_text.set_text(f"MET: {current_t:.2f} Days\nALT: {dist_earth:,.0f} km")
+        # Halo follows the spacecraft
         spacecraft_halo.center = (x, y)
         # halo radius scales with speed for a subtle effect
         spacecraft_halo.set_radius(max(12000, 20000 * (0.5 + speed_now / (speed_s.max() + 1e-9))))
@@ -294,7 +292,7 @@ def run_simulation(moon_x=MOON_X, moon_y=MOON_Y, mission_days=MISSION_DAYS,
         sc_col = cmap(norm(speed_now))
         spacecraft.set_color(sc_col)
 
-        return spacecraft, signal_line, time_text, telemetry_text, trail_lc, spacecraft_halo, moon, comm_text, watermark_text
+        return spacecraft, signal_line, telemetry_text, trail_lc, spacecraft_halo, moon, comm_text, watermark_text
 
     # Run the animation (don't use blit to ensure all artists update reliably)
     ani = animation.FuncAnimation(fig, animate, frames=frames_count, interval=20, blit=False)
